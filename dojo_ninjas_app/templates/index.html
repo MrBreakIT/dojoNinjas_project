@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dojos & Ninjas</title>
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <style>
+        body {
+            background-color: gray;
+            background-image: "dojo_ninjas_app/static/img/CodingDojoLogo.png";
+        }
+
+        .container {
+            width: 100%;
+            padding: 5px;
+        }
+
+        .upper {
+            width: 95%;
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        input,
+        button {
+            margin-top: 15px;
+        }
+
+        h3 {
+            margin-top: 25px;
+            margin-left: 200px;
+        }
+
+        .lower {
+            margin-left: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="upper">
+            <div id="leftside">
+                <form action="/addDojo" method="POST">
+                    {% csrf_token %}
+                    <h2>Add a Dojo</h2>
+                    <input type="text" class="form-control" id="inputName" name="name" placeholder="Dojo Name">
+                    <input type="text" class="form-control" id="inputCity" name="city" placeholder="Dojo City">
+                    <input type="text" class="form-control" id="inputDojo" name="state" placeholder="Dojo State">
+                    <input type="submit" class="btn btn-secondary" value="Add">
+                </form>
+            </div>
+            <div id="rightside">
+                <form action="/addNinja" method="POST">
+                    {% csrf_token %}
+                    <h2>Add a Ninja</h2>
+                    <input type="text" class="form-control" id="input_fName" name="fname" placeholder="First Name">
+                    <input type="text" class="form-control" id="input_lName" name="lname" placeholder="Last Name">
+                    <select class="custom-select" id="input_Dojo" name="dojo">
+                        <option value="select dojo">select Dojo</option>
+                        {% for i in dojo_objects %}
+                        <option value="{{i.id}}">{{i.name}}</option>
+                        {% endfor %}
+                        <input type="submit" class="btn btn-secondary" value="Add">
+                </form>
+            </div>
+        </div>
+        <div class="lower">
+            <hr>
+            <h3>All the Dojo and Ninjas!!!</h3>
+
+            <ul id="all_dojo_info">
+                {% for i in dojo_objects %}
+                <li>
+                    Ninjas at the {{ i.name }}
+                    <ul>
+                        {% for j in i.ninjas.all %}
+                        <li>{{ j.fname }} {{ j.lname }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endfor %}
+                <hr>
+                <div>
+                    <form action="/deleteDojo" method="POST">
+                        {% csrf_token %}
+                    <h6>What dojo would you like to delete?</h6>
+                    <option value="select dojo"></option>
+                    <select class="custom-select" id="deleteDojo" name="delete">
+                        {% for i in dojo_objects %}
+                        <option value="{{i.id}}">{{i.name}}</option>
+                        {% endfor %}
+                        <input type="submit" class="btn btn-secondary" value="delete">
+                    </form>
+                </div>
+            </ul>
+        </div>
+    </div>
+
+</body>
+
+</html>
